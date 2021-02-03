@@ -1,0 +1,20 @@
+<div buttons>
+    <button mat-flat-button type="button" color="primary" [routerLink]="['/']"><mat-icon>arrow_back</mat-icon>Back</button>
+    <button mat-flat-button type="button" color="primary" (click)="save()" [disabled]="!(form?.dirty)">Save</button>
+  </div>
+<div class="loading-shade" *ngIf="saving">
+  <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
+</div>
+<br/>
+<p>
+  To configure this application, go to your GIL-Find instance.  Copy the URL and paste into the line below.  It should look like the following:<br>  
+  https://galileo-usg-[institution]-primo.hosted.exlibrisgroup.com/primo-explore/search?tab=default_tab&vid=[VIEW]
+</p>
+<br/>
+<form [formGroup]="form">
+  <section class="config-section">
+    <mat-form-field>
+      <input matInput placeholder="Institution URL" formControlName="serviceUrl" size="70">
+    </mat-form-field>  
+  </section>
+</form>

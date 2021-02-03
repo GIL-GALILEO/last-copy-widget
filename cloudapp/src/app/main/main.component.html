@@ -1,0 +1,48 @@
+<section>
+  <h1>
+    Welcome!
+  </h1>
+  <div  *ngIf="base_url.length < 1">
+  <p>
+    Before using this application, please go to the Configuration tool to set your institution URL.  To find the Configuration tool, click the '...' in the upper
+    right hand corner of this screen and click the wrench icon.
+  </p>
+</div>
+
+  <p>This app is for seeing if a particular item is a "Last Copy" in USG:</p>
+  <ul>
+    <li>Scan in a Barcode from an item</li>
+    <li>This app grabs OCLC numbers and any NZ numbers with the API and creates a Primo link that searches for those numbers in the USG scope.</li>
+    <li>You can also can use the checklist below to perform a search as a last resort if the first result is lacking.</li>
+  </ul>
+</section>
+
+<section>
+  <mat-card class="example-card">
+    <mat-card-header>
+      <mat-card-title>Barcode Primo Search Results</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <a href={{primo_url}} target="_blank">Primo Link</a>
+    </mat-card-content>
+  </mat-card>
+</section>
+
+<section>
+  <mat-card class="example-card">
+    <mat-card-header>
+      <mat-card-title>Title/Author Search</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p> Use this if the above Pimo search returns no results.  You can check any number of options to perform a search.  
+        The window will open in a new tab.</p>
+      <form [formGroup]="search_form" (ngSubmit)="submit()">
+        <div *ngFor="let criteria of criteriaData">
+          <input type="checkbox" (change)="onChange(criteria.name, $event.target.checked)" />
+          {{ criteria.name }}
+        </div>
+        <button mat-raised-button color="primary">Submit</button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</section>
