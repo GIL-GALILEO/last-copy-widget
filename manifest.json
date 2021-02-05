@@ -2,6 +2,7 @@
    "id": "last-copy-widget",
    "title": "Last Copy Widget",
    "description": "Loads a barcode or title/author to see if it's the only copy in the NZ",
+   "subtitle": "Loads a barcode or title/author to see if it's the only copy in the NZ",
    "author": "Chris Fishburn",
    "icon": {
       "type": "font",
@@ -9,5 +10,11 @@
    },
    "pages": {
       "config": "/#/config"
-   }
+   },
+   "contentSecurity": {
+      "sandbox": {
+         "popups": true
+      }
+   },
+   "entities": ["BIB_MMS", "ITEM"]
 }

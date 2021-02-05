@@ -3,7 +3,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import {
   CloudAppRestService, CloudAppEventsService, Request, HttpMethod,
-  Entity, PageInfo, RestErrorResponse, CloudAppConfigService
+  Entity, PageInfo, RestErrorResponse, CloudAppConfigService, EntityType
 } from '@exlibris/exl-cloudapp-angular-lib';
 import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
 
@@ -20,7 +20,7 @@ export interface Criteria {
 export class MainComponent implements OnInit, OnDestroy {
   
   private pageLoad$: Subscription;
-  base_url: string;
+  base_url: string = "";
   private vid: string;
   pageEntities: Entity[];
   private _apiResult: any;
@@ -75,7 +75,7 @@ export class MainComponent implements OnInit, OnDestroy {
 
   submit() {
     let search_url = this.base_url.concat('?');
-    let url_end = ',AND&tab=default_tab&search_scope=USG&sortby=rank&lang=en_US&mode=advanced&offset=0&vid='.concat(this.vid);
+    let url_end = ',AND&tab=default_tab&sortby=rank&lang=en_US&mode=advanced&offset=0&vid='.concat(this.vid);
     let search_cond = this.search_form.value.name;
     const last_item = search_cond[search_cond.length - 1];
     search_cond.forEach(element => {
@@ -137,16 +137,18 @@ export class MainComponent implements OnInit, OnDestroy {
   }
 
   onPageLoad = (pageInfo: PageInfo) => {
-    this.pageEntities = pageInfo.entities;
-    if ((pageInfo.entities || []).length == 1) {
-      const entity = pageInfo.entities[0];
+    const pageEntities = (pageInfo.entities || [])
+    .filter(e=>[EntityType.BIB_MMS, EntityType.ITEM].includes(e.type));
+    if (pageEntities.length == 1) {
+      const entity = pageEntities[0];
       this.restService.call(entity.link).subscribe(result => {
         console.log(result);
-        this.primo_url = this.createPrimoUrl(result.network_number);
-        this.apiResult = result;
+        const network_number = result.network_number || result.bib_data.network_number || [];
+        this.primo_url = this.createPrimoUrl(network_number);
+        this.apiResult = result.bib_data || result;
       })
     } else {
-      this.apiResult = {};
+      this.apiResult = null;
     }
     
   }
@@ -177,11 +179,12 @@ export class MainComponent implements OnInit, OnDestroy {
     //console.log(value);
     let net_nums = value;
     let search_url = this.base_url.concat('?query=any,contains,');
-    let url_end = ',AND&tab=default_tab&search_scope=USG&sortby=rank&lang=en_US&mode=advanced&offset=0&vid='.concat(this.vid);
+    let url_end = ',AND&tab=default_tab&sortby=rank&lang=en_US&mode=advanced&offset=0&vid='.concat(this.vid);
     let nz_number = ''; 
-    net_nums.forEach(element => {
-      if (element.search(/EXLNZ-01GALI_NETWORK/) != -1){
-        nz_number = element.slice(23);
+    net_nums.forEach((element: string) => {
+      const nzmatch = element.match(/(^\(EXLNZ-\w*\))/);
+      if ( nzmatch ){
+        nz_number = element.slice(nzmatch[1].length);
         search_url = search_url.concat(nz_number);
       }
       else{

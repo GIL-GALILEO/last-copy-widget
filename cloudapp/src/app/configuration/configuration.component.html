@@ -1,4 +1,4 @@
-<div buttons>
+<div class="eca-actions">
     <button mat-flat-button type="button" color="primary" [routerLink]="['/']"><mat-icon>arrow_back</mat-icon>Back</button>
     <button mat-flat-button type="button" color="primary" (click)="save()" [disabled]="!(form?.dirty)">Save</button>
   </div>
@@ -8,7 +8,7 @@
 <br/>
 <p>
   To configure this application, go to your GIL-Find instance.  Copy the URL and paste into the line below.  It should look like the following:<br>  
-  https://galileo-usg-[institution]-primo.hosted.exlibrisgroup.com/primo-explore/search?tab=default_tab&vid=[VIEW]
+  https:/[institution]-primo.hosted.exlibrisgroup.com/primo-explore/search?tab=default_tab&search_scope=[SCOPE]&vid=[VIEW]
 </p>
 <br/>
 <form [formGroup]="form">
