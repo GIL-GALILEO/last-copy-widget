@@ -9,15 +9,15 @@
   </p>
 </div>
 
-  <p>This app is for seeing if a particular item is a "Last Copy" in USG:</p>
+  <p>This app is for seeing if a particular item is a "Last Copy":</p>
   <ul>
-    <li>Scan in a Barcode from an item</li>
-    <li>This app grabs OCLC numbers and any NZ numbers with the API and creates a Primo link that searches for those numbers in the USG scope.</li>
+    <li>Scan in a Barcode or search for an item</li>
+    <li>This app grabs OCLC numbers and any NZ numbers with the API and creates a Primo link that searches for those numbers.</li>
     <li>You can also can use the checklist below to perform a search as a last resort if the first result is lacking.</li>
   </ul>
 </section>
 
-<section>
+<section *ngIf="apiResult">
   <mat-card class="example-card">
     <mat-card-header>
       <mat-card-title>Barcode Primo Search Results</mat-card-title>
@@ -28,7 +28,7 @@
   </mat-card>
 </section>
 
-<section>
+<section *ngIf="apiResult">
   <mat-card class="example-card">
     <mat-card-header>
       <mat-card-title>Title/Author Search</mat-card-title>
