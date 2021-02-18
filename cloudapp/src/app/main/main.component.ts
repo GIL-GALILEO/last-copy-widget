@@ -31,8 +31,6 @@ export class MainComponent implements OnInit, OnDestroy {
   almaResult: any;
   network_numbers: any;
   primo_url = '';
-  
-  title_primo_url = '';
 
   criteriaData: Criteria[] = [
     { id: 0, name: 'Title' },
@@ -149,7 +147,6 @@ export class MainComponent implements OnInit, OnDestroy {
       this.restService.call(entity.link).subscribe(result => {
         console.log(result);
         const network_number = result.network_number || result.bib_data.network_number || [];
-        console.log(network_number)
         this.primo_url = this.createPrimoUrl(network_number);
         this.apiResult = result.bib_data || result;
       })
@@ -181,13 +178,10 @@ export class MainComponent implements OnInit, OnDestroy {
   }
   
   createPrimoUrl(value: any){
-    console.log("Went into fucntion");
     let net_nums = value;
     let search_url = this.base_url.concat('?query=any,contains,');
-    //let url_params = '&search_scope='.concat(this.scope.concat('&vid='.concat(this.vid)));
     let url_end = ',AND&tab=default_tab&sortby=rank&lang=en_US&mode=advanced&offset=0'.
       concat('&search_scope='.concat(this.scope.concat('&vid='.concat(this.vid))))
-    //let url_end = ',AND&tab=default_tab&sortby=rank&lang=en_US&mode=advanced&offset=0&vid='.concat(this.vid);
     let nz_number = ''; 
     net_nums.forEach((element: string) => {
       const nzmatch = element.match(/(^\(EXLNZ-\w*\))/);
