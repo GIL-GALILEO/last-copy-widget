@@ -16,5 +16,8 @@
          "popups": true
       }
    },
-   "entities": ["BIB_MMS", "ITEM"]
+   "entities": [
+      "BIB_MMS",
+      "ITEM"
+   ]
 }

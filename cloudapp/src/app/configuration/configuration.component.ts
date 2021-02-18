@@ -22,7 +22,11 @@ export class ConfigurationComponent implements OnInit {
   ngOnInit() {
     this.appService.setTitle('Configuration');
     this.form = this.fb.group({
-      serviceUrl: this.fb.control('')
+      serviceUrl: this.fb.control(''),
+      //institution: this.fb.control(''),
+      //view: this.fb.control(''),
+      //scope: this.fb.control('')
+
     });
     this.load();
   }

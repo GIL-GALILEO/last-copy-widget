@@ -21,7 +21,8 @@ export class MainComponent implements OnInit, OnDestroy {
   
   private pageLoad$: Subscription;
   base_url: string = "";
-  private vid: string;
+  scope: string = "";
+  vid: string = "";
   pageEntities: Entity[];
   private _apiResult: any;
 
@@ -30,6 +31,7 @@ export class MainComponent implements OnInit, OnDestroy {
   almaResult: any;
   network_numbers: any;
   primo_url = '';
+  
   title_primo_url = '';
 
   criteriaData: Criteria[] = [
@@ -69,13 +71,16 @@ export class MainComponent implements OnInit, OnDestroy {
       console.log(response.serviceUrl);
       this.base_url = response.serviceUrl.substring(0,response.serviceUrl.indexOf('?'));
       this.vid = response.serviceUrl.substring((response.serviceUrl.lastIndexOf("=")+1), response.serviceUrl.length);
+      this.scope = response.serviceUrl.substring(response.serviceUrl.indexOf("search_scope=")+13, response.serviceUrl.indexOf("&vid"));
     },
     err => console.log(err.message));
   }
 
   submit() {
     let search_url = this.base_url.concat('?');
-    let url_end = ',AND&tab=default_tab&sortby=rank&lang=en_US&mode=advanced&offset=0&vid='.concat(this.vid);
+    //let url_end = ',AND&tab=default_tab&sortby=rank&lang=en_US&mode=advanced&offset=0&vid='.concat(this.vid);
+    let url_end = ',AND&tab=default_tab&sortby=rank&lang=en_US&mode=advanced&offset=0'.
+      concat('&search_scope='.concat(this.scope.concat('&vid='.concat(this.vid))))
     let search_cond = this.search_form.value.name;
     const last_item = search_cond[search_cond.length - 1];
     search_cond.forEach(element => {
@@ -144,6 +149,7 @@ export class MainComponent implements OnInit, OnDestroy {
       this.restService.call(entity.link).subscribe(result => {
         console.log(result);
         const network_number = result.network_number || result.bib_data.network_number || [];
+        console.log(network_number)
         this.primo_url = this.createPrimoUrl(network_number);
         this.apiResult = result.bib_data || result;
       })
@@ -176,10 +182,12 @@ export class MainComponent implements OnInit, OnDestroy {
   
   createPrimoUrl(value: any){
     console.log("Went into fucntion");
-    //console.log(value);
     let net_nums = value;
     let search_url = this.base_url.concat('?query=any,contains,');
-    let url_end = ',AND&tab=default_tab&sortby=rank&lang=en_US&mode=advanced&offset=0&vid='.concat(this.vid);
+    //let url_params = '&search_scope='.concat(this.scope.concat('&vid='.concat(this.vid)));
+    let url_end = ',AND&tab=default_tab&sortby=rank&lang=en_US&mode=advanced&offset=0'.
+      concat('&search_scope='.concat(this.scope.concat('&vid='.concat(this.vid))))
+    //let url_end = ',AND&tab=default_tab&sortby=rank&lang=en_US&mode=advanced&offset=0&vid='.concat(this.vid);
     let nz_number = ''; 
     net_nums.forEach((element: string) => {
       const nzmatch = element.match(/(^\(EXLNZ-\w*\))/);
