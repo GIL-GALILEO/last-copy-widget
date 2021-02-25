@@ -184,14 +184,16 @@ export class MainComponent implements OnInit, OnDestroy {
       concat('&search_scope='.concat(this.scope.concat('&vid='.concat(this.vid))))
     let nz_number = ''; 
     net_nums.forEach((element: string) => {
-      const nzmatch = element.match(/(^\(EXLNZ-\w*\))/);
-      if ( nzmatch ){
-        nz_number = element.slice(nzmatch[1].length);
-        search_url = search_url.concat(nz_number);
-      }
-      else{
-        search_url = search_url.concat(element);
-        search_url = search_url.concat(',OR&query=any,contains,');
+      if (element.length > 0){
+        const nzmatch = element.match(/(^\(EXLNZ-\w*\))/);
+        if ( nzmatch ){
+          nz_number = element.slice(nzmatch[1].length);
+          search_url = search_url.concat(nz_number);
+        }
+        else{
+          search_url = search_url.concat(element);
+          search_url = search_url.concat(',OR&query=any,contains,');
+        }
       }
     });
 
