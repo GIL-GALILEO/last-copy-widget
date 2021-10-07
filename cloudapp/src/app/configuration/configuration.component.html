@@ -7,13 +7,20 @@
 </div>
 <br/>
 <p>
-  To configure this application, you need a URL for your Primo instance.  Copy the following URL and paste into the line below.  
-  It should look like the following:<br>  
-  https://[institution]-primo.hosted.exlibrisgroup.com/primo-explore/search?tab=default_tab&search_scope=[SCOPE]&vid=[VIEW]<br>
+  To configure this application, you need a URL for your Primo or Primo VE instance.  Copy one of the following URLs, depending on which version of
+  Primo you are using, and paste into the line below. 
+<br/><br/>
+  <b>Non-PrimoVE users</b>:<br>  
+  https://[institution].exlibrisgroup.com/primo-explore/search?tab=[TAB]&search_scope=[SCOPE]&vid=[VIEW]<br>
   <br>
+  <b>Primo VE users</b>:<br>
+  https://[institution].exlibrisgroup.com/discovery/search?tab=[TAB]&search_scope=[SCOPE]&vid=[VIEW]
+  <br/><br/>
   Replace the parts in the [ ], including the brackets themselves, with the approprate values from your Primo instance:
   <br><br>
-  [institution] = The part of your Primo instance url unique to your institution between the https:// and the '-primo'.
+  [institution] = The part of your Primo instance url unique to your institution between the https:// and the 'exlibrisgroup'.
+  <br><br>
+  [TAB] = The tab you are using for your search.  If you don't have a specific tab, use 'default_tab'.
   <br><br>
   [SCOPE] = This is your consortial search scope.
   <br><br>

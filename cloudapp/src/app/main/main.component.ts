@@ -6,6 +6,7 @@ import {
   Entity, PageInfo, RestErrorResponse, CloudAppConfigService, EntityType
 } from '@exlibris/exl-cloudapp-angular-lib';
 import { FormBuilder, FormGroup, FormArray, FormControl } from '@angular/forms';
+import { RouteConfigLoadEnd } from '@angular/router';
 
 export interface Criteria {
   id: number;
@@ -23,6 +24,9 @@ export class MainComponent implements OnInit, OnDestroy {
   base_url: string = "";
   scope: string = "";
   vid: string = "";
+  tab: string = "";
+
+
   pageEntities: Entity[];
   private _apiResult: any;
 
@@ -65,20 +69,16 @@ export class MainComponent implements OnInit, OnDestroy {
       name: this.fb.array([])
     });
     this.configService.get().subscribe( response => {
-      console.log("Got the config:");
-      console.log(response.serviceUrl);
-      this.base_url = response.serviceUrl.substring(0,response.serviceUrl.indexOf('?'));
-      this.vid = response.serviceUrl.substring((response.serviceUrl.lastIndexOf("=")+1), response.serviceUrl.length);
-      this.scope = response.serviceUrl.substring(response.serviceUrl.indexOf("search_scope=")+13, response.serviceUrl.indexOf("&vid"));
+      //below function is for testing with Primo VE
+      this.get_url_parts(response.serviceUrl);
     },
     err => console.log(err.message));
   }
 
   submit() {
     let search_url = this.base_url.concat('?');
-    //let url_end = ',AND&tab=default_tab&sortby=rank&lang=en_US&mode=advanced&offset=0&vid='.concat(this.vid);
-    let url_end = ',AND&tab=default_tab&sortby=rank&lang=en_US&mode=advanced&offset=0'.
-      concat('&search_scope='.concat(this.scope.concat('&vid='.concat(this.vid))))
+    let url_end = ',AND&tab='.concat(this.tab.concat('&sortby=rank&lang=en_US&mode=advanced&offset=0'.
+      concat('&search_scope='.concat(this.scope.concat('&vid='.concat(this.vid))))));
     let search_cond = this.search_form.value.name;
     const last_item = search_cond[search_cond.length - 1];
     search_cond.forEach(element => {
@@ -180,8 +180,8 @@ export class MainComponent implements OnInit, OnDestroy {
   createPrimoUrl(value: any){
     let net_nums = value;
     let search_url = this.base_url.concat('?query=any,contains,');
-    let url_end = ',AND&tab=default_tab&sortby=rank&lang=en_US&mode=advanced&offset=0'.
-      concat('&search_scope='.concat(this.scope.concat('&vid='.concat(this.vid))))
+    let url_end = ',AND&tab='.concat(this.tab.concat('&sortby=rank&lang=en_US&mode=advanced&offset=0'.
+      concat('&search_scope='.concat(this.scope.concat('&vid='.concat(this.vid))))));
     let nz_number = ''; 
     net_nums.forEach((element: string) => {
       if (element.length > 0){
@@ -198,8 +198,33 @@ export class MainComponent implements OnInit, OnDestroy {
     });
 
     search_url = search_url.concat(url_end);
-    console.log(search_url);
+
     return search_url;
+  }
+
+  //gets the parameters for the URL - base_url, vid, scope, and tab
+  get_url_parts(value: string){
+    let url_split = value.split("?",2);
+    this.base_url = url_split[0];
+    let params_array = url_split[1].split("&",3);
+
+    //loop through param_array with case statement, splittin each
+    //element along '=' and setting the params into the second element of 
+    //each split array
+
+    params_array.forEach((element) => {
+      let param = element.split("=", 2);
+      if (param[0] == 'vid'){
+        this.vid = param[1];
+      }
+      else if (param[0] == 'search_scope'){
+        this.scope = param[1];
+      }
+      else if (param[0] == 'tab'){
+        this.tab = param[1];
+      }
+    });
+
   }
 
 }
